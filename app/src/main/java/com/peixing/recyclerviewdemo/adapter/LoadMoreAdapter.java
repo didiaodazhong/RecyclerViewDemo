@@ -155,31 +155,49 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
     private static final int VIEW_PROG = 1;
     private final Context mContext;
     private final RecyclerView mRecyclerView;
+    //加载数据源
     private List<String> mData;
     private final LayoutInflater inflater;
+    //加载更多状态码
     private boolean isLoading;
+    //总条目数
     private int totalItemCount;
+    //最后一个可显示的条目位置
     private int lastVisibleItemPosition;
     //当前滚动的position下面最小的items的临界值
-    private int visibleThreshold = 8;
+    private int visibleThreshold = 5;
 
     RecyclerView.ViewHolder holder;
 
+    //加载更多监听
+    private LoadMoreDataListener mMoreDataListener;
+    //条目点击监听
+    private RecyclerOnItemClickListener mOnitemClickListener;
+
+    //加载更多接口
     public interface LoadMoreDataListener {
         public abstract void loadMoreData();
     }
 
-
+    //条目点击接口
     public interface RecyclerOnItemClickListener {
-        public abstract void onItemClick(View view,int position);
+        public abstract void onItemClick(View view, int position);
     }
 
+    /**
+     * 构造函数
+     *
+     * @param context
+     * @param recyclerView
+     */
 
     public LoadMoreAdapter(Context context, RecyclerView recyclerView) {
         mContext = context;
         inflater = LayoutInflater.from(context);
         mRecyclerView = recyclerView;
+        //
         if (mRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+            //获取layoutManager
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             //mRecyclerView添加滑动事件监听
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -201,14 +219,17 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
     }
 
     public void setLoaded() {
+        //反转状态码
         isLoading = false;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_ITEM) {
+            //加载显示正常条目
             holder = new MyViewHolder(inflater.inflate(R.layout.item_linearlayout, parent, false));
         } else {
+            //加载显示正在加载footer条目
             holder = new MyProgressViewHolder(inflater.inflate(R.layout.item_footer, parent, false));
         }
         return holder;
@@ -223,6 +244,7 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //条目点击方法
                         mOnitemClickListener.onItemClick(v, position);
                     }
                 });
@@ -235,6 +257,7 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
+        //需要加入一个footerView布局
         return mData == null ? 0 : mData.size() + 1;
     }
 
@@ -244,6 +267,7 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
 //        return mData.get(position) != null ? VIEW_ITEM : VIEW_PROG;
         if (position + 1 == getItemCount()) {
+            //判断当前是否为最后一个条目
             return VIEW_PROG;
         } else {
             return VIEW_ITEM;
@@ -257,20 +281,16 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
         public MyViewHolder(View itemView) {
             super(itemView);
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
-
         }
-
     }
 
     public class MyProgressViewHolder extends RecyclerView.ViewHolder {
-
         private final ProgressBar pb;
 
         public MyProgressViewHolder(View itemView) {
             super(itemView);
             pb = (ProgressBar) itemView.findViewById(R.id.progressbar);
         }
-
     }
 
     //设置数据的方法
@@ -278,14 +298,11 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
         mData = data;
     }
 
-    private LoadMoreDataListener mMoreDataListener;
-
     //加载更多监听方法
     public void setOnMoreDataLoadListener(LoadMoreDataListener onMoreDataLoadListener) {
         mMoreDataListener = onMoreDataLoadListener;
     }
 
-    private RecyclerOnItemClickListener mOnitemClickListener;
 
     //点击事件监听方法
     public void setOnItemClickListener(RecyclerOnItemClickListener onItemClickListener) {

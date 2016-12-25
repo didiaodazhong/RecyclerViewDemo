@@ -25,8 +25,8 @@ import java.util.ArrayList;
 public class StaggeredGridLayoutFragment extends BaseFragment {
     private SwipeRefreshLayout swipeRefresh;
     private RecyclerView linearLayout1;
-
-
+//    ArrayList<String> lists = new ArrayList<>();
+    ArrayList<String> lists;
 
     @Override
     protected void goBack() {
@@ -35,7 +35,9 @@ public class StaggeredGridLayoutFragment extends BaseFragment {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        ArrayList<String> lists = new ArrayList<>();
+
+        lists = new ArrayList<>();
+//        lists.clear();
         for (int i = 0; i < 25; i++) {
             lists.add("李斯羽" + i);
         }

@@ -27,8 +27,9 @@ public class LinearLayoutFragment extends BaseFragment {
     private static final int REGRESHING = 2;
     private SwipeRefreshLayout swipeRefresh;
     private RecyclerView linearLayout;
-    ArrayList<String> lists = new ArrayList<>();
-    ArrayList<String> newLists = new ArrayList<>();
+    ArrayList<String> lists;
+    ArrayList<String> newLists;
+    ArrayList<String> moreData;
     LinearAdapter linearAdapter;
     RecyclerView.LayoutManager layoutManager;
     LoadMoreAdapter loadMoreAdapter;
@@ -39,11 +40,14 @@ public class LinearLayoutFragment extends BaseFragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case LOAD_MORE:
+                    //加载更多
                     lists.add(null);
                     loadMoreAdapter.notifyDataSetChanged();
                     loadMoreDatas();
                     break;
                 case REGRESHING:
+                    //下拉刷新
+                    newLists = new ArrayList<>();
                     for (int i = 0; i < 5; i++) {
                         newLists.add(" 刷新出来的" + i);
                     }
@@ -62,22 +66,27 @@ public class LinearLayoutFragment extends BaseFragment {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-
+        lists = new ArrayList<>();
+//        lists.clear();
+        if (newLists != null) {
+            lists.addAll(0, newLists);
+        }
         for (int i = 0; i < 15; i++) {
             lists.add("张三" + i);
         }
-
+        if (moreData != null) {
+            lists.addAll(moreData);
+        }
 //        linearAdapter = new LinearAdapter(getActivity(), lists);
 
         loadMoreAdapter = new LoadMoreAdapter(getActivity(), linearLayout);
-
         linearLayout.setAdapter(loadMoreAdapter);
         loadMoreAdapter.setData(lists);
         linearLayout.addItemDecoration(new MyDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         loadMoreAdapter.setOnMoreDataLoadListener(new LoadMoreAdapter.LoadMoreDataListener() {
             @Override
             public void loadMoreData() {
-                myHandler.sendEmptyMessageDelayed(LOAD_MORE, 2800);
+                myHandler.sendEmptyMessageDelayed(LOAD_MORE, 3500);
             }
         });
 
@@ -102,12 +111,12 @@ public class LinearLayoutFragment extends BaseFragment {
         layoutManager = new LinearLayoutManager(getActivity());
         linearLayout.setLayoutManager(layoutManager);
         swipeRefresh.setRefreshing(false);
-        swipeRefresh.setColorSchemeColors(getResources().getColor(R.color.LightPink), getResources().getColor(R.color.LightSkyBlue), getResources().getColor(R.color.LightSkyBlue), getResources().getColor(R.color.Orchid));
+        swipeRefresh.setColorSchemeColors(getResources().getColor(R.color.LightPink), getResources().getColor(R.color.LightSkyBlue), getResources().getColor(R.color.colorPrimaryDark), getResources().getColor(R.color.Orchid));
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefresh.setRefreshing(true);
-                myHandler.sendEmptyMessageDelayed(REGRESHING, 5000);
+                myHandler.sendEmptyMessageDelayed(REGRESHING, 4000);
             }
         });
         return view;
@@ -116,9 +125,14 @@ public class LinearLayoutFragment extends BaseFragment {
     private void loadMoreDatas() {
         lists.remove(lists.size() - 1);
         loadMoreAdapter.notifyDataSetChanged();
+
+        moreData = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            lists.add("新家在的数据" + i);
+//            lists.add("新家在的数据" + i);
+            moreData.add("新家在的数据" + i);
+
         }
+        lists.addAll(moreData);
         loadMoreAdapter.notifyDataSetChanged();
         loadMoreAdapter.setLoaded();
     }
