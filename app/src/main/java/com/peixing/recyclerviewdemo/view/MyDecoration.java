@@ -66,7 +66,7 @@ public class MyDecoration extends RecyclerView.ItemDecoration {
             View child = parent.getChildAt(i);
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
             int top = child.getBottom() + params.bottomMargin;
-            int bottom = top = mDivider.getIntrinsicHeight();
+            int bottom = top + mDivider.getIntrinsicHeight();
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
             Log.d("drawHorizontalLine", left + " " + top + " "+right+"   "+bottom+" "+i);
@@ -81,7 +81,8 @@ public class MyDecoration extends RecyclerView.ItemDecoration {
             View child = parent.getChildAt(i);
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
             int left = child.getRight() + params.rightMargin;
-            int right = left = mDivider.getIntrinsicWidth();
+            int right = left + mDivider.getIntrinsicWidth();
+            mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
             Log.d("drawVerticalLine", left + " " + top + " "+right+"   "+bottom+" "+i);
         }

@@ -40,7 +40,8 @@ public class StaggeredAdapter extends RecyclerView.Adapter<StaggeredAdapter.View
 
         //Here you can fill your row view
         itemViewHolder.tvName.setText(message.get(position));
-        itemViewHolder.tvName.setHeight((position%16)*10);
+        itemViewHolder.tvName.setHeight((position%5)*10);
+//        itemViewHolder.tvName.setTextSize((position%)*10);
         if (mListener != null) {
             itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
