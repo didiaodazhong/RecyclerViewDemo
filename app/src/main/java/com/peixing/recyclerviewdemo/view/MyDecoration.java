@@ -69,7 +69,7 @@ public class MyDecoration extends RecyclerView.ItemDecoration {
             int bottom = top + mDivider.getIntrinsicHeight();
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
-            Log.d("drawHorizontalLine", left + " " + top + " "+right+"   "+bottom+" "+i);
+//            Log.d("drawHorizontalLine", left + " " + top + " "+right+"   "+bottom+" "+i);
         }
     }
 
@@ -84,7 +84,7 @@ public class MyDecoration extends RecyclerView.ItemDecoration {
             int right = left + mDivider.getIntrinsicWidth();
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
-            Log.d("drawVerticalLine", left + " " + top + " "+right+"   "+bottom+" "+i);
+//            Log.d("drawVerticalLine", left + " " + top + " "+right+"   "+bottom+" "+i);
         }
     }
 

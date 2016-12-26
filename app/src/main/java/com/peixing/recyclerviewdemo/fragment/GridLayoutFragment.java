@@ -9,9 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
+import com.peixing.recyclerviewdemo.Image;
 import com.peixing.recyclerviewdemo.R;
+import com.peixing.recyclerviewdemo.adapter.GridAdapter;
 import com.peixing.recyclerviewdemo.adapter.LinearAdapter;
 import com.peixing.recyclerviewdemo.view.MyDecoration;
 
@@ -24,7 +27,7 @@ public class GridLayoutFragment extends BaseFragment {
 
     private SwipeRefreshLayout swipeRefreshGrid;
     private RecyclerView gridLayout;
-
+    GridAdapter gridAdapter;
 
     @Override
     protected void goBack() {
@@ -37,10 +40,19 @@ public class GridLayoutFragment extends BaseFragment {
         for (int i = 0; i < 25; i++) {
             lists.add("李斯" + i);
         }
-        LinearAdapter linearAdapter = new LinearAdapter(getActivity(), lists);
-        gridLayout.setAdapter(linearAdapter);
-        gridLayout.addItemDecoration(new MyDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+//        LinearAdapter linearAdapter = new LinearAdapter(getActivity(), lists);
+//        gridLayout.setAdapter(linearAdapter);
 
+        gridAdapter = new GridAdapter(getActivity(), Image.imageThumbUrls, gridLayout);
+        gridLayout.setAdapter(gridAdapter);
+        gridLayout.addItemDecoration(new MyDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        gridAdapter.setItemHeight(250);
+       /* gridLayout.getViewTreeObserver().addOnGlobalFocusChangeListener(new ViewTreeObserver.OnGlobalFocusChangeListener() {
+            @Override
+            public void onGlobalFocusChanged(View oldFocus, View newFocus) {
+
+            }
+        });*/
     }
 
     @Override
@@ -52,5 +64,17 @@ public class GridLayoutFragment extends BaseFragment {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
         gridLayout.setLayoutManager(layoutManager);
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        gridAdapter.flushCache();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        gridAdapter.cancelAllTasks();
     }
 }
